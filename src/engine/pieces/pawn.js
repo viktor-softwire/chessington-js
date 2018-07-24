@@ -17,7 +17,7 @@ export default class Pawn extends Piece {
         // If possible to move by one
         if ((position.row + direction >= 0) && (position.row + direction < GameSettings.BOARD_SIZE)) {
             if (!board.getPiece(Square.at(position.row + direction, position.col))) {
-                possibleDirectionsToGo.push(Square.at(position.row + direction, position.row));
+                possibleDirectionsToGo.push(Square.at(position.row + direction, position.col));
             }
         }
 
@@ -34,12 +34,12 @@ export default class Pawn extends Piece {
         if ((position.row + direction >= 0) && (position.row + direction < GameSettings.BOARD_SIZE)) {
             // Left side
             if (!!board.getPiece(Square.at(position.row + direction, position.col - 1)) && (board.getPiece(Square.at(position.row + direction, position.col - 1).player !== this.player))) {
-                possibleDirectionsToHit.push(Square.at(position.row + direction, position.row));
+                possibleDirectionsToHit.push(Square.at(position.row + direction, position.col - 1));
             }
 
             // Right side
             if (!!board.getPiece(Square.at(position.row + direction, position.col + 1)) && (Square.at(board.getPiece(position.row + direction, position.col + 1).player !== this.player))) {
-                possibleDirectionsToHit.push(Square.at(position.row + direction, position.row));
+                possibleDirectionsToHit.push(Square.at(position.row + direction, position.col + 1));
             }
         }
 
