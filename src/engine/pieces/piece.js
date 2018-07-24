@@ -15,6 +15,7 @@ export default class Piece {
     }
 
     checkPiece(board, square) {
+        if (!this.checkPiece) return null;
         if (!board.getPiece(square)) return ColoredSquare.EMPTY;
         if (board.getPiece(square).player === this.player) return ColoredSquare.ALLY;
         return ColoredSquare.ENEMY;
