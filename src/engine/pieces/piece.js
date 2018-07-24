@@ -44,11 +44,11 @@ export default class Piece {
 
     scanDirections(directions, board, repeat = true) {
         const possibleToGos = directions.map(x => {
-            const result = this.sweepPattern(x[0], x[1], board);
+            const result = this.sweepPattern(x[0], x[1], board, repeat);
             return result.possibleGo;
         });
         const possibleToHits = directions.map(x => {
-            const result = this.sweepPattern(x[0], x[1], board);
+            const result = this.sweepPattern(x[0], x[1], board, repeat);
             return result.possibleHit;
         });
         
