@@ -6,6 +6,9 @@ export default class Queen extends Piece {
     }
 
     getAvailableMoves(board) {
-        return new Array(0);
+        const possibleDirections = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0, -1]];
+        const result = this.scanDirections(possibleDirections, board);
+
+        return result.possibleToGo.concat(result.possibleToHit);    
     }
 }

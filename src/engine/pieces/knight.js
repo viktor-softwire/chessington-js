@@ -6,6 +6,9 @@ export default class Knight extends Piece {
     }
 
     getAvailableMoves(board) {
-        return new Array(0);
-    }
+        const possibleDirections = [[2, 1], [2, -1], [-2, 1], [-2, -1], [1, 2], [1, -2], [-1, 2], [-1, -2]];
+        const result = this.scanDirections(possibleDirections, board, false);
+
+        return result.possibleToGo.concat(result.possibleToHit);
+    }    
 }
