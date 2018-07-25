@@ -1,8 +1,10 @@
 import ColoredSquare from '../coloredSquare';
+import MoveType from '../moveType';
 
 export default class Piece {
     constructor(player) {
         this.player = player;
+        this.hasBeenMoved = false;
     }
 
     getAvailableMoves(board) {
@@ -10,6 +12,7 @@ export default class Piece {
     }
 
     moveTo(board, newSquare) {
+        this.hasBeenMoved = true;
         const currentSquare = board.findPiece(this);
         board.movePiece(currentSquare, newSquare);
     }

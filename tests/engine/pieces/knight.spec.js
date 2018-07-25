@@ -1,3 +1,5 @@
+var assert = require('assert');
+
 import 'chai/register-should';
 import Knight from '../../../src/engine/pieces/knight';
 import Pawn from '../../../src/engine/pieces/pawn';
