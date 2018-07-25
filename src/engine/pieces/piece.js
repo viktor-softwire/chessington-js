@@ -14,20 +14,13 @@ export default class Piece {
         board.movePiece(currentSquare, newSquare);
     }
 
-    checkPiece(board, square) {
-        if (!this.checkPiece) return null;
-        if (!board.getPiece(square)) return ColoredSquare.EMPTY;
-        if (board.getPiece(square).player === this.player) return ColoredSquare.ALLY;
-        return ColoredSquare.ENEMY;
-    }
-
     sweepPattern(deltaRow, deltaCol, board, repeat = true) {
         const startPosition = board.findPiece(this);
         const possibleToGo = [];
         const possibleToHit = [];
         let currentPosition = startPosition.moveBy(deltaRow, deltaCol);
         while (currentPosition) {
-            const status = this.checkPiece(board, currentPosition);
+            const status = board.checkPiece(this, currentPosition);
             if (status === ColoredSquare.EMPTY) {
                 possibleToGo.push(currentPosition);
                 currentPosition = currentPosition.moveBy(deltaRow, deltaCol);

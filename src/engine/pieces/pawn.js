@@ -17,13 +17,13 @@ export default class Pawn extends Piece {
         
         // If possible to move by one
         const singleSquare = position.moveBy(direction, 0);
-        if ((singleSquare) && (this.checkPiece(board, singleSquare) === ColoredSquare.EMPTY)) {
+        if ((singleSquare) && (board.checkPiece(this, singleSquare) === ColoredSquare.EMPTY)) {
             possibleDirectionsToGo.push(singleSquare);
             
             // If possible to move by two (starting position)
             if (((position.row === 6) && (this.player === Player.BLACK)) || ((position.row === 1) && (this.player === Player.WHITE))) {
                 const doubleSquare = position.moveBy(2*direction, 0);
-                if ((doubleSquare) && (this.checkPiece(board, doubleSquare) === ColoredSquare.EMPTY)) {
+                if ((doubleSquare) && (board.checkPiece(this, doubleSquare) === ColoredSquare.EMPTY)) {
                     possibleDirectionsToGo.push(doubleSquare);
                 }
             }
@@ -37,13 +37,13 @@ export default class Pawn extends Piece {
         if (upSquare) {
             // Left side
             const leftSquare = upSquare.moveBy(0, -1);
-            if ((leftSquare) && (this.checkPiece(board, leftSquare) === ColoredSquare.ENEMY)) {
+            if ((leftSquare) && (board.checkPiece(this, leftSquare) === ColoredSquare.ENEMY)) {
                 possibleDirectionsToHit.push(leftSquare);
             }
             
             const rightSquare = upSquare.moveBy(0, 1);
             // Right side
-            if ((rightSquare) && (this.checkPiece(board, rightSquare) === ColoredSquare.ENEMY)) {
+            if ((rightSquare) && (board.checkPiece(this, rightSquare) === ColoredSquare.ENEMY)) {
                 possibleDirectionsToHit.push(rightSquare);
             }
         }

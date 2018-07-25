@@ -1,6 +1,8 @@
 import Player from './player';
 import GameSettings from './gameSettings';
 import Square from './square';
+import ColoredSquare from './coloredSquare';
+import King from './pieces/king';
 
 export default class Board {
     constructor(currentPlayer) {
@@ -42,5 +44,13 @@ export default class Board {
             this.setPiece(fromSquare, undefined);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
         }
+    }
+
+    checkPiece(original, square) {
+        const currentPiece = this.getPiece(square);
+        if (!currentPiece) return ColoredSquare.EMPTY;
+        if (currentPiece.player === original.player) return ColoredSquare.ALLY;
+        if (currentPiece instanceof King) return ColoredSquare.ENEMY_KING;
+        return ColoredSquare.ENEMY;
     }
 }
