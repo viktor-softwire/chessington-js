@@ -8,6 +8,7 @@ export default class Board {
     constructor(currentPlayer) {
         this.currentPlayer = currentPlayer ? currentPlayer : Player.WHITE;
         this.board = this.createBoard();
+        this.kings = {white: undefined, black: undefined};
     }
 
     createBoard() {
@@ -20,6 +21,12 @@ export default class Board {
 
     setPiece(square, piece) {
         this.board[square.row][square.col] = piece;
+
+        // Keep track of kings; ASSUME ONLY ONE PER PLAYER
+        if (piece instanceof King) {
+            if (piece.player === Player.BLACK) this.kings.black = piece;
+            if (piece.player === Player.WHITE) this.kings.white = piece; 
+        }
     }
 
     getPiece(square) {
@@ -46,11 +53,29 @@ export default class Board {
         }
     }
 
+    // Checks the realtion of square w.r.t. original piece
+    // Returns ColoredSquare
     checkPiece(original, square) {
         const currentPiece = this.getPiece(square);
         if (!currentPiece) return ColoredSquare.EMPTY;
         if (currentPiece.player === original.player) return ColoredSquare.ALLY;
         if (currentPiece instanceof King) return ColoredSquare.ENEMY_KING;
         return ColoredSquare.ENEMY;
+    }
+
+    isKingChecked(player) {
+        const king = player === Player.WHITE ? this.kings.white : this.kings.black;
+        const kingPos = this.findPiece(king);
+
+        for (let row = 0; row < GameSettings.BOARD_SIZE; row++) {
+            for (let col = 0; col < GameSettings.BOARD_SIZE; col++) {
+                const currentPiece = this.getPiece(Square.at(row, col));
+                if (currentPiece) {
+                    if (king.indexOfSquare(currentPiece.getAvailableMoves(this, true), kingPos) > -1) return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -9,7 +9,7 @@ export default class Pawn extends Piece {
         super(player);
     }
 
-    getAvailableMoves(board) {
+    getAvailableMoves(board, includeEnemyKing = false) {
 
         const position = board.findPiece(this);
         const direction = this.player === Player.WHITE ? 1 : -1;
@@ -37,13 +37,13 @@ export default class Pawn extends Piece {
         if (upSquare) {
             // Left side
             const leftSquare = upSquare.moveBy(0, -1);
-            if ((leftSquare) && (board.checkPiece(this, leftSquare) === ColoredSquare.ENEMY)) {
+            if ((leftSquare) && (board.checkPiece(this, leftSquare) === ColoredSquare.ENEMY || (board.checkPiece(this, leftSquare) === ColoredSquare.ENEMY_KING && includeEnemyKing))) {
                 possibleDirectionsToHit.push(leftSquare);
             }
             
             const rightSquare = upSquare.moveBy(0, 1);
             // Right side
-            if ((rightSquare) && (board.checkPiece(this, rightSquare) === ColoredSquare.ENEMY)) {
+            if ((rightSquare) && (board.checkPiece(this, rightSquare) === ColoredSquare.ENEMY || (board.checkPiece(this, rightSquare) === ColoredSquare.ENEMY_KING && includeEnemyKing))) {
                 possibleDirectionsToHit.push(rightSquare);
             }
         }

@@ -1,6 +1,7 @@
 import Piece from './piece';
 import Square from '../square';
 import Rook from './rook';
+import Modifiers from '../modifiers';
 
 export default class King extends Piece {
     constructor(player) {
@@ -26,9 +27,9 @@ export default class King extends Piece {
     }
 
 
-    getAvailableMoves(board) {
+    getAvailableMoves(board, includeEnemyKing = false) {
         const possibleDirections = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0, -1]];
-        const result = this.scanDirections(possibleDirections, board, false);
+        const result = this.scanDirections(possibleDirections, board, !Modifiers.REPEAT, includeEnemyKing);
 
         // Handle castling
         if (!this.hasBeenMoved) {
@@ -42,23 +43,18 @@ export default class King extends Piece {
         return result.possibleToGo.concat(result.possibleToHit);  
     }
 
+    // Checks the conditions for castling
+    // TODO: INCLUDE CHECKING RULES
     castlingCheck(board, col) {
         const position = board.findPiece(this);
         const expectedRook = board.getPiece(Square.at(position.row, col));
         if (expectedRook && expectedRook.player === this.player && expectedRook instanceof Rook && !expectedRook.hasBeenMoved) {
             const direction = col === 0 ? -1 : 1;
-            const sweepBase = this.scanDirections([[position.row, direction]], board, true);
+            const sweepBase = this.scanDirections([[position.row, direction]], board, Modifiers.REPEAT);
             if (this.indexOfSquare(sweepBase.possibleToGo, Square.at(position.row, col - direction)) > -1) {
                 return Square.at(position.row, position.col + 2*direction);
             }
         }
-    }   
-
-    indexOfSquare(list, square) {
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].row === square.row && list[i].col === square.col) return i;
-        }
-        return -1;
     }
 
 }

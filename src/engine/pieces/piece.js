@@ -1,5 +1,4 @@
 import ColoredSquare from '../coloredSquare';
-import MoveType from '../moveType';
 
 export default class Piece {
     constructor(player) {
@@ -17,7 +16,7 @@ export default class Piece {
         board.movePiece(currentSquare, newSquare);
     }
 
-    sweepPattern(deltaRow, deltaCol, board, repeat = true) {
+    sweepPattern(deltaRow, deltaCol, board, repeat = true, includeEnemyKing = false) {
         const startPosition = board.findPiece(this);
         const possibleToGo = [];
         const possibleToHit = [];
@@ -33,19 +32,22 @@ export default class Piece {
             if (status === ColoredSquare.ENEMY) {
                 possibleToHit.push(currentPosition);
             }
+            if (status === ColoredSquare.ENEMY_KING && includeEnemyKing) {
+                possibleToHit.push(currentPosition);
+            }
             break;
         }
 
         return {possibleGo: possibleToGo, possibleHit: possibleToHit};
     }
 
-    scanDirections(directions, board, repeat = true) {
+    scanDirections(directions, board, repeat = true, includeEnemyKing = false) {
         const possibleToGos = directions.map(x => {
-            const result = this.sweepPattern(x[0], x[1], board, repeat);
+            const result = this.sweepPattern(x[0], x[1], board, repeat, includeEnemyKing);
             return result.possibleGo;
         });
         const possibleToHits = directions.map(x => {
-            const result = this.sweepPattern(x[0], x[1], board, repeat);
+            const result = this.sweepPattern(x[0], x[1], board, repeat, includeEnemyKing);
             return result.possibleHit;
         });
         
@@ -54,5 +56,12 @@ export default class Piece {
         const possibleDirectionsToHit = [].concat.apply([], possibleToHits);
 
         return {possibleToGo: possibleDirectionsToGo, possibleToHit: possibleDirectionsToHit};
+    }
+
+    indexOfSquare(list, square) {
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].row === square.row && list[i].col === square.col) return i;
+        }
+        return -1;
     }
 }
