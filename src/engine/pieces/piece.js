@@ -55,6 +55,13 @@ export default class Piece {
         const possibleDirectionsToGo = [].concat.apply([], possibleToGos);
         const possibleDirectionsToHit = [].concat.apply([], possibleToHits);
 
+        // If this is an actual move (i.e. includeEnemyKing === False)
+        // Check every position for check
+        if (!includeEnemyKing) {
+            const checked = this.runCheckChecking({possibleToGo: possibleDirectionsToGo, possibleToHit: possibleDirectionsToHit}, board);
+            return checked;  // In the format of {possibleToGo: ..., possibleToHit: ...}
+        }
+
         return {possibleToGo: possibleDirectionsToGo, possibleToHit: possibleDirectionsToHit};
     }
 
@@ -63,5 +70,42 @@ export default class Piece {
             if (list[i].row === square.row && list[i].col === square.col) return i;
         }
         return -1;
+    }
+
+    // Checks the found possible moves whether it will cause check
+    runCheckChecking(allPossibleMoves, board) {
+
+        const possibleToGoWithoutCheck = [];
+        const possibleToHitWithoutCheck = [];
+        const origin = board.findPiece(this);
+
+        allPossibleMoves.possibleToGo.forEach(step => {
+            // Temporarly update board
+            board.setPiece(origin, undefined);
+            board.setPiece(step, this);
+
+            if (!board.isKingChecked(this.player)) possibleToGoWithoutCheck.push(step);
+            
+            //Remove updates to board
+            board.setPiece(origin, this);
+            board.setPiece(step, undefined);
+        });
+
+        allPossibleMoves.possibleToHit.forEach(step => {
+            // Temporarly update board
+            const hitPiece = board.getPiece(step);
+            board.setPiece(origin, undefined);
+            board.setPiece(step, this);
+
+            if (!board.isKingChecked(this.player)) possibleToHitWithoutCheck.push(step);
+            
+            //Remove updates to board
+            board.setPiece(origin, this);
+            board.setPiece(step, hitPiece);
+        });
+        
+        // throw {possibleToGo: possibleToGoWithoutCheck, possibleToHit: possibleToHitWithoutCheck};
+        return {possibleToGo: possibleToGoWithoutCheck, possibleToHit: possibleToHitWithoutCheck};
+
     }
 }

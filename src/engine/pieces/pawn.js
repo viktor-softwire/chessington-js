@@ -48,6 +48,12 @@ export default class Pawn extends Piece {
             }
         }
 
+        // Checks the found moves if real move
+        if (!includeEnemyKing) {
+            const result = this.runCheckChecking({possibleToGo: possibleDirectionsToGo, possibleToHit: possibleDirectionsToHit}, board)
+            return result.possibleToGo.concat(result.possibleToHit);
+        }
+
         return possibleDirectionsToGo.concat(possibleDirectionsToHit);
     }
 }

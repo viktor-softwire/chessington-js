@@ -65,6 +65,10 @@ export default class Board {
 
     isKingChecked(player) {
         const king = player === Player.WHITE ? this.kings.white : this.kings.black;
+        
+        // If there are no kings 
+        if (!king) return false;
+    
         const kingPos = this.findPiece(king);
 
         for (let row = 0; row < GameSettings.BOARD_SIZE; row++) {

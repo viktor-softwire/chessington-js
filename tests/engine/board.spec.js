@@ -137,8 +137,10 @@ describe('Board', () => {
             board.setPiece(Square.at(0, 0), enemyQueen);
 
             board.isKingChecked(Player.BLACK).should.eql(true);
-            king.getAvailableMoves(board).should.have.length(1);
+            king.getAvailableMoves(board).should.have.length(2);
             king.getAvailableMoves(board).should.deep.include(Square.at(2, 1));
+            king.getAvailableMoves(board).should.deep.include(Square.at(0, 0));
+
         });
 
         it('Can block check (bishop)', () => {
@@ -147,7 +149,7 @@ describe('Board', () => {
             const enemyQueen = new Queen(Player.WHITE)
             board.setPiece(Square.at(0, 0), king);
             board.setPiece(Square.at(4, 0), enemyQueen);
-            board.setPiece(Square.at(2, 2), bishop);
+            board.setPiece(Square.at(1, 1), bishop);
 
             board.isKingChecked(Player.BLACK).should.eql(true);
             bishop.getAvailableMoves(board).should.have.length(1);
@@ -156,14 +158,14 @@ describe('Board', () => {
         });
 
         it('Can block check (pawn)', () => {
-            const king = new King(Player.BLACK);
-            const pawn = new Pawn(Player.BLACK)
-            const enemyQueen = new Queen(Player.WHITE)
+            const king = new King(Player.WHITE);
+            const pawn = new Pawn(Player.WHITE);
+            const enemyQueen = new Queen(Player.BLACK)
             board.setPiece(Square.at(0, 0), king);
             board.setPiece(Square.at(4, 4), enemyQueen);
             board.setPiece(Square.at(1, 3), pawn);
 
-            board.isKingChecked(Player.BLACK).should.eql(true);
+            board.isKingChecked(Player.WHITE).should.eql(true);
             pawn.getAvailableMoves(board).should.have.length(1);
             pawn.getAvailableMoves(board).should.deep.include(Square.at(3, 3));
             
@@ -173,7 +175,7 @@ describe('Board', () => {
             const king = new King(Player.BLACK);
             const enemyQueen = new Queen(Player.WHITE)
             board.setPiece(Square.at(0, 0), king);
-            board.setPiece(Square.at(1, 3), enemyQueen);
+            board.setPiece(Square.at(3, 1), enemyQueen);
         
             board.isKingChecked(Player.BLACK).should.eql(false);
             king.getAvailableMoves(board).should.have.length(1);
@@ -186,8 +188,8 @@ describe('Board', () => {
             const rook = new Rook(Player.BLACK)
             const enemyQueen = new Queen(Player.WHITE)
             board.setPiece(Square.at(0, 0), king);
-            board.setPiece(Square.at(2, 0), enemyQueen);
-            board.setPiece(Square.at(1, 0), rook);
+            board.setPiece(Square.at(2, 2), enemyQueen);
+            board.setPiece(Square.at(1, 1), rook);
 
             board.isKingChecked(Player.BLACK).should.eql(false);
             rook.getAvailableMoves(board).should.have.length(0);
