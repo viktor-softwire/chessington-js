@@ -108,4 +108,11 @@ export default class Piece {
         return {possibleToGo: possibleToGoWithoutCheck, possibleToHit: possibleToHitWithoutCheck};
 
     }
+
+    // Checks one hypothetical move
+    checkHypotheticalMove(move, board) {
+        const result = this.runCheckChecking({possibleToGo: [move], possibleToHit: []}, board);
+        if (result.possibleToGo.length === 0) return false;
+        return true;
+    }
 }

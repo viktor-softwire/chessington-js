@@ -6,6 +6,7 @@ import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
 import Rook from '../../../src/engine/pieces/rook';
 import Knight from '../../../src/engine/pieces/knight';
+import Queen from '../../../src/engine/pieces/queen';
 
 
 describe('King', () => {
@@ -153,6 +154,71 @@ describe('King', () => {
 
         moves.should.not.deep.include(Square.at(0, 2));
     })
+
+    it('cannot castle if in chess', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+        const enemyQueen = new Queen(Player.BLACK)
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 0), rook);
+        board.setPiece(Square.at(4, 4), enemyQueen);
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.not.deep.include(Square.at(0, 2));
+    });
+
+    it('cannot long castle if moves through threatened square', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+        const enemyQueen = new Queen(Player.BLACK)
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 0), rook);
+        board.setPiece(Square.at(3, 3), enemyQueen);
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.not.deep.include(Square.at(0, 2));
+    });
+
+    it('cannot short castle if moves through threatened square', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+        const enemyQueen = new Queen(Player.BLACK)
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 7), rook);
+        board.setPiece(Square.at(5, 5), enemyQueen);
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.not.deep.include(Square.at(0, 6));
+    });
+
+    it('cannot castle if ends up in chess', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+        const enemyQueen = new Queen(Player.BLACK)
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 0), rook);
+        board.setPiece(Square.at(7, 2), enemyQueen);
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.not.deep.include(Square.at(0, 2));
+    });
+
+    it('can castle if rook moves through threatened square', () => {
+        const king = new King(Player.WHITE);
+        const rook = new Rook(Player.WHITE);
+        const enemyRook = new Rook(Player.BLACK)
+        board.setPiece(Square.at(0, 4), king);
+        board.setPiece(Square.at(0, 0), rook);
+        board.setPiece(Square.at(1, 1), enemyRook);
+
+        const moves = king.getAvailableMoves(board);
+        moves.should.deep.include(Square.at(0, 2));
+        
+    });
 
     
 
